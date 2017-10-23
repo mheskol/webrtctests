@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=1">
+		<meta name="mobile-web-app-capable" content="yes">
+	</head>
+	<body>
+		<video id="video" autoplay></video>
+		<script>
+			'use strict';
+			var videoElement = document.querySelector('video');
+			function gotStream(stream) {
+				videoElement.srcObject = stream;
+			}
+			
+			var constraints = {
+				video: { width: { min: 1280, ideal: 1920 }, height: { min: 720, ideal: 1080 }  }
+			};
+			navigator.mediaDevices.getUserMedia(constraints).then(gotStream);
+			
+			function gotDevices(deviceInfos) {
+				for (var i = 0; i < deviceInfos.length; i++) {
+					if (deviceInfos[i].kind == "videoinput") {
+						var constraints = {
+							video: { deviceId: deviceInfos[i].deviceId }
+						};
+						navigator.mediaDevices.getUserMedia(constraints).then(gotStream);
+						break;
+					}
+				}
+			}
+			
+			//navigator.mediaDevices.enumerateDevices().then(gotDevices);
+		</script>
+	</body>
+</html>
